@@ -106,10 +106,12 @@ if (userName) {
       document.getElementById(pageId).classList.remove('hidden');
     }
     function goHome() {
-      document.getElementById('home').classList.remove('hidden');
-      document.getElementById('dice').classList.add('hidden');
-      document.getElementById('map').classList.add('hidden');
-    }
+  document.getElementById('home').classList.remove('hidden');
+  document.getElementById('dice').classList.add('hidden');
+  document.getElementById('map').classList.add('hidden');
+  document.getElementById('namegen').classList.add('hidden');
+}
+
     function rollDice(sides) {
       const diceElements = document.querySelectorAll('.dice');
       diceElements.forEach(dice => dice.classList.remove('rolling'));
