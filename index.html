@@ -6,11 +6,27 @@
   <title>Tale of Talos Cosmos</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Reset and basic styles */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; font-family: 'Cinzel', serif; overflow: hidden; background: #000; color: #d0d0ff; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      font-family: 'Cinzel', serif;
+      overflow: hidden;
+      background: #000; /* fallback background */
+      color: #d0d0ff;
+    }
 
-    #starfield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+    #starfield {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+    }
 
     header {
       text-align: center;
@@ -21,6 +37,7 @@
       position: relative;
       z-index: 2;
     }
+
     .content {
       display: flex;
       flex-direction: column;
@@ -30,6 +47,7 @@
       z-index: 2;
       position: relative;
     }
+
     .button-container {
       margin-top: 30px;
       display: flex;
@@ -37,6 +55,7 @@
       flex-wrap: wrap;
       justify-content: center;
     }
+
     button {
       background: #2b2b50;
       border: 2px solid #d0d0ff;
@@ -48,12 +67,16 @@
       transition: 0.3s;
       box-shadow: 0 0 10px #2b2b50;
     }
+
     button:hover {
       background: #3d3d70;
       transform: scale(1.05);
       box-shadow: 0 0 20px #5a5acc;
     }
-    .hidden { display: none; }
+
+    .hidden {
+      display: none;
+    }
 
     .dice-container {
       margin-top: 30px;
@@ -62,6 +85,7 @@
       flex-wrap: wrap;
       justify-content: center;
     }
+
     .dice {
       background: #2b2b50;
       border: 2px solid #d0d0ff;
@@ -72,14 +96,17 @@
       transition: 0.3s;
       box-shadow: 0 0 15px #2b2b50;
     }
+
     .dice:hover {
       background: #3d3d70;
       transform: scale(1.1);
       box-shadow: 0 0 20px #5a5acc;
     }
+
     .dice.rolling {
       animation: shake 0.8s;
     }
+
     @keyframes shake {
       0% { transform: translate(1px, 1px) rotate(0deg); }
       10% { transform: translate(-1px, -2px) rotate(-1deg); }
@@ -93,13 +120,17 @@
       90% { transform: translate(1px, 2px) rotate(0deg); }
       100% { transform: translate(1px, -2px) rotate(-1deg); }
     }
+
     .result {
       margin-top: 30px;
       font-size: 2em;
       text-align: center;
       text-shadow: 0 0 10px #c0a0ff;
     }
-    .back-button { margin-top: 30px; }
+
+    .back-button {
+      margin-top: 30px;
+    }
   </style>
 </head>
 
@@ -112,7 +143,7 @@
     <p>Welcome, traveler, to the astral plane...</p>
     <div class="button-container">
       <button onclick="showPage('dice')">🎲 Dice Roller</button>
-      <button onclick="openMap()">🗺️ Map</button>
+      <button onclick="alert('Name Generator coming soon!')">🧙 Name Generator</button>
       <button onclick="alert('Monster Lookup coming soon!')">🐉 Monster Lookup</button>
       <button onclick="alert('Tavern Generator coming soon!')">🍻 Tavern Generator</button>
     </div>
@@ -135,18 +166,18 @@
   </div>
 
   <script>
-    // Navigation
+    // Page navigation
     function showPage(pageId) {
       document.getElementById('home').classList.add('hidden');
       document.getElementById('dice').classList.add('hidden');
       document.getElementById(pageId).classList.remove('hidden');
     }
+
     function goHome() {
       document.getElementById('home').classList.remove('hidden');
       document.getElementById('dice').classList.add('hidden');
     }
 
-    // Dice Roller
     function rollDice(sides) {
       const diceElements = document.querySelectorAll('.dice');
       diceElements.forEach(dice => dice.classList.remove('rolling'));
@@ -158,148 +189,62 @@
 
       setTimeout(() => {
         const roll = Math.floor(Math.random() * sides) + 1;
-        resultDiv.textContent = `🎲 You rolled a ${roll} on a D${sides}!`;
+        resultDiv.textContent = 🎲 You rolled a ${roll} on a D${sides}!;
         clickedDice.classList.remove('rolling');
       }, 800);
     }
 
-    // Open Map Drawer
-    function openMap() {
-      const mapWindow = window.open("", "_blank", "width=1000,height=800");
-      mapWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <title>Map Drawer</title>
-          <style>
-            body { margin: 0; overflow: hidden; background: #000; }
-            #toolbar {
-              position: fixed;
-              top: 10px;
-              left: 50%;
-              transform: translateX(-50%);
-              background: rgba(0,0,0,0.7);
-              padding: 10px;
-              border-radius: 8px;
-              z-index: 10;
-              display: flex;
-              gap: 10px;
-            }
-            button {
-              background: #2b2b50;
-              border: none;
-              color: #d0d0ff;
-              padding: 8px 15px;
-              border-radius: 5px;
-              cursor: pointer;
-              font-size: 1em;
-            }
-            button:hover { background: #3d3d70; }
-            canvas { background: #fff; display: block; cursor: crosshair; }
-          </style>
-        </head>
-        <body>
-          <div id="toolbar">
-            <button onclick="pen()">✏️ Pen</button>
-            <button onclick="eraser()">🩹 Eraser</button>
-            <button onclick="clearCanvas()">🗑️ Clear</button>
-          </div>
-          <canvas id="mapCanvas"></canvas>
-          <script>
-            const canvas = document.getElementById('mapCanvas');
-            const ctx = canvas.getContext('2d');
-            let drawing = false;
-            let erasing = false;
+    // Starfield animation
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let width, height, stars;
 
-            function resizeCanvas() {
-              canvas.width = window.innerWidth;
-              canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-
-            canvas.addEventListener('mousedown', () => {
-              drawing = true;
-              ctx.beginPath();
-            });
-            canvas.addEventListener('mouseup', () => {
-              drawing = false;
-              ctx.beginPath();
-            });
-            canvas.addEventListener('mousemove', draw);
-
-            function draw(e) {
-              if (!drawing) return;
-              ctx.lineWidth = 4;
-              ctx.lineCap = 'round';
-              ctx.strokeStyle = erasing ? '#fff' : '#000';
-              ctx.lineTo(e.clientX, e.clientY);
-              ctx.stroke();
-              ctx.beginPath();
-              ctx.moveTo(e.clientX, e.clientY);
-            }
-
-            function pen() { erasing = false; }
-            function eraser() { erasing = true; }
-            function clearCanvas() {
-              ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
-          </script>
-        </body>
-        </html>
-      `);
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      createStars();
     }
 
-    // Starfield background
-    document.addEventListener('DOMContentLoaded', () => {
-      const canvas = document.getElementById('starfield');
-      const ctx = canvas.getContext('2d');
-      let stars = [];
-
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        createStars();
+    function createStars() {
+      stars = [];
+      for (let i = 0; i < 200; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 2,
+          speed: Math.random() * 0.5 + 0.3
+        });
       }
+    }
 
-      function createStars() {
-        stars = [];
-        for (let i = 0; i < 200; i++) {
-          stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 2,
-            speed: Math.random() * 0.5 + 0.3
-          });
+    function drawStars() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'white';
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    function animateStars() {
+      stars.forEach(star => {
+        star.y += star.speed;
+        if (star.y > height) {
+          star.y = 0;
+          star.x = Math.random() * width;
         }
-      }
+      });
+      drawStars();
+      requestAnimationFrame(animateStars);
+    }
 
-      function drawStars() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'white';
-        stars.forEach(star => {
-          ctx.beginPath();
-          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-          ctx.fill();
-        });
-      }
+    window.addEventListener('resize', resize);
 
-      function animateStars() {
-        stars.forEach(star => {
-          star.y += star.speed;
-          if (star.y > canvas.height) {
-            star.y = 0;
-            star.x = Math.random() * canvas.width;
-          }
-        });
-        drawStars();
-        requestAnimationFrame(animateStars);
-      }
-
-      window.addEventListener('resize', resizeCanvas);
-      resizeCanvas();
-      animateStars();
-    });
+    resize();
+    animateStars();
   </script>
 </body>
 </html>
