@@ -15,7 +15,7 @@
       height: 100%;
       font-family: 'Cinzel', serif;
       overflow: hidden;
-      background: #000; /* fallback background */
+      background: #000;
       color: #d0d0ff;
     }
 
@@ -143,7 +143,7 @@
     <p>Welcome, traveler, to the astral plane...</p>
     <div class="button-container">
       <button onclick="showPage('dice')">🎲 Dice Roller</button>
-      <button onclick="alert('Name Generator coming soon!')">🧙 Name Generator</button>
+      <button onclick="openMap()">🗺️ Map</button>
       <button onclick="alert('Monster Lookup coming soon!')">🐉 Monster Lookup</button>
       <button onclick="alert('Tavern Generator coming soon!')">🍻 Tavern Generator</button>
     </div>
@@ -192,6 +192,115 @@
         resultDiv.textContent = `🎲 You rolled a ${roll} on a D${sides}!`;
         clickedDice.classList.remove('rolling');
       }, 800);
+    }
+
+    function openMap() {
+      const mapWindow = window.open("", "Map", "width=1000,height=700");
+      mapWindow.document.write(`
+        <html>
+        <head>
+          <title>Map Drawing</title>
+          <style>
+            body { margin: 0; overflow: hidden; background: #111; }
+            #toolbar {
+              position: fixed;
+              top: 10px;
+              left: 50%;
+              transform: translateX(-50%);
+              z-index: 10;
+              display: flex;
+              gap: 10px;
+            }
+            button, select {
+              padding: 10px 15px;
+              font-size: 1em;
+              cursor: pointer;
+              border-radius: 8px;
+              border: none;
+              background: #444;
+              color: white;
+            }
+            canvas {
+              position: absolute;
+              top: 0; left: 0;
+              width: 100%;
+              height: 100%;
+            }
+          </style>
+        </head>
+        <body>
+          <div id="toolbar">
+            <button onclick="setMode('draw')">🖊️ Pen</button>
+            <button onclick="setMode('erase')">🩹 Eraser</button>
+            <select id="colorPicker" onchange="changeColor()">
+              <option value="white">White</option>
+              <option value="red">Red</option>
+              <option value="blue">Blue</option>
+              <option value="green">Green</option>
+              <option value="yellow">Yellow</option>
+            </select>
+            <button onclick="clearCanvas()">🗑️ Clear</button>
+            <button onclick="downloadMap()">💾 Download</button>
+          </div>
+          <canvas id="mapCanvas"></canvas>
+          <script>
+            const canvas = document.getElementById('mapCanvas');
+            const ctx = canvas.getContext('2d');
+            let drawing = false;
+            let mode = 'draw';
+            let penColor = 'white';
+
+            function resizeCanvas() {
+              canvas.width = window.innerWidth;
+              canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            canvas.addEventListener('mousedown', () => { drawing = true; ctx.beginPath(); });
+            canvas.addEventListener('mouseup', () => drawing = false);
+            canvas.addEventListener('mouseout', () => drawing = false);
+            canvas.addEventListener('mousemove', draw);
+
+            function setMode(newMode) {
+              mode = newMode;
+            }
+
+            function changeColor() {
+              const colorPicker = document.getElementById('colorPicker');
+              penColor = colorPicker.value;
+            }
+
+            function draw(e) {
+              if (!drawing) return;
+              ctx.lineWidth = 5;
+              ctx.lineCap = 'round';
+              ctx.strokeStyle = (mode === 'draw') ? penColor : '#111';
+              ctx.lineTo(e.clientX, e.clientY);
+              ctx.stroke();
+              ctx.beginPath();
+              ctx.moveTo(e.clientX, e.clientY);
+            }
+
+            function clearCanvas() {
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              ctx.fillStyle = '#111';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            function downloadMap() {
+              const link = document.createElement('a');
+              link.download = 'my-map.png';
+              link.href = canvas.toDataURL();
+              link.click();
+            }
+
+            ctx.fillStyle = '#111';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          </script>
+        </body>
+        </html>
+      `);
     }
 
     // Starfield animation
