@@ -37,6 +37,7 @@
       <button onclick="showPage('map')">🗺️ Map</button>
       <button onclick="showPage('namegen')">📝 Name Generator</button>
       <button onclick="alert('Tavern Generator coming soon!')">🍻 Tavern Generator</button>
+	  <button onclick="riddleChallenge()">Solve the Riddle</button>
     </div>
   </div>
   <div class="content hidden" id="dice">
@@ -222,6 +223,21 @@ function drawOnMap(e) {
       clearInterval(typing);
     }
   }, 50); // Speed of typing (50ms per character)
+}
+function riddleChallenge() {
+  const riddle = "I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?";
+  const answer = "echo"; // correct answer
+  
+  let userAnswer = prompt(riddle);
+  
+  if (userAnswer) {
+    userAnswer = userAnswer.trim().toLowerCase();
+    if (userAnswer === answer) {
+      alert("✅ Correct! You may pass, traveler...");
+    } else {
+      alert("❌ Incorrect... Try again!");
+    }
+  }
 }
 
 
