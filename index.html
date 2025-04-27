@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tale of Talos Cosmos - Dice Roller</title>
+  <title>Tale of Talos Cosmos</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -12,18 +12,59 @@
       font-family: 'Cinzel', serif;
       background: radial-gradient(ellipse at center, #0b0c2a 0%, #000000 100%);
       color: #d0d0ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px 20px 20px;
+      font-size: 2.5em;
+      font-weight: 700;
+      text-shadow: 0 0 10px #c0a0ff, 0 0 20px #c0a0ff;
+    }
+
+    .content {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      overflow: hidden;
+      margin-top: 30px;
+      width: 100%;
     }
 
-    h1 {
-      font-size: 3em;
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px #c0a0ff, 0 0 20px #c0a0ff;
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    button {
+      background: #2b2b50;
+      border: 2px solid #d0d0ff;
+      color: #d0d0ff;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #2b2b50;
+    }
+
+    button:hover {
+      background: #3d3d70;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #5a5acc;
+    }
+
+    .hidden {
+      display: none;
     }
 
     .dice-container {
@@ -31,6 +72,7 @@
       flex-wrap: wrap;
       gap: 20px;
       justify-content: center;
+      margin-top: 30px;
     }
 
     .dice {
@@ -41,7 +83,7 @@
       font-size: 1.5em;
       border-radius: 12px;
       cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease;
+      transition: 0.3s;
       box-shadow: 0 0 15px #2b2b50;
       position: relative;
     }
@@ -73,25 +115,58 @@
     .result {
       margin-top: 30px;
       font-size: 2em;
-      color: #c0a0ff;
+      text-align: center;
       text-shadow: 0 0 10px #c0a0ff;
+    }
+
+    .back-button {
+      margin-top: 30px;
     }
   </style>
 </head>
+
 <body>
-  <h1>Tale of Talos Cosmos</h1>
-  <div class="dice-container">
-    <div class="dice" onclick="rollDice(4)">D4</div>
-    <div class="dice" onclick="rollDice(6)">D6</div>
-    <div class="dice" onclick="rollDice(8)">D8</div>
-    <div class="dice" onclick="rollDice(10)">D10</div>
-    <div class="dice" onclick="rollDice(12)">D12</div>
-    <div class="dice" onclick="rollDice(20)">D20</div>
+  <header>Tale of Talos Cosmos</header>
+
+  <div class="content" id="home">
+    <p>Welcome, traveler, to the astral plane...</p>
+    <div class="button-container">
+      <button onclick="showPage('dice')">🎲 Dice Roller</button>
+      <button onclick="alert('Name Generator coming soon!')">🧙 Name Generator</button>
+      <button onclick="alert('Monster Lookup coming soon!')">🐉 Monster Lookup</button>
+      <button onclick="alert('Tavern Generator coming soon!')">🍻 Tavern Generator</button>
+    </div>
   </div>
 
-  <div class="result" id="result">Click a dice to roll!</div>
+  <div class="content hidden" id="dice">
+    <h2>Dice Roller</h2>
+    <div class="dice-container">
+      <div class="dice" onclick="rollDice(4)">D4</div>
+      <div class="dice" onclick="rollDice(6)">D6</div>
+      <div class="dice" onclick="rollDice(8)">D8</div>
+      <div class="dice" onclick="rollDice(10)">D10</div>
+      <div class="dice" onclick="rollDice(12)">D12</div>
+      <div class="dice" onclick="rollDice(20)">D20</div>
+    </div>
+    <div class="result" id="result">Click a dice to roll!</div>
+    <div class="back-button">
+      <button onclick="goHome()">⬅️ Back to Home</button>
+    </div>
+  </div>
 
   <script>
+    function showPage(pageId) {
+      document.getElementById('home').classList.add('hidden');
+      document.getElementById('dice').classList.add('hidden');
+
+      document.getElementById(pageId).classList.remove('hidden');
+    }
+
+    function goHome() {
+      document.getElementById('home').classList.remove('hidden');
+      document.getElementById('dice').classList.add('hidden');
+    }
+
     function rollDice(sides) {
       const diceElements = document.querySelectorAll('.dice');
       diceElements.forEach(dice => dice.classList.remove('rolling'));
