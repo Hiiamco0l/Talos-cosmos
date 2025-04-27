@@ -37,6 +37,7 @@
       <button onclick="showPage('map')">🗺️ Map</button>
       <button onclick="showPage('namegen')">📝 Name Generator</button> 
 	  <button onclick="riddleChallenge()">Solve the Riddle</button>
+	  <button onclick="startTreasureHunt()">🪙 Treasure Hunt</button>
     </div>
   </div>
   <div class="content hidden" id="dice">
@@ -238,6 +239,24 @@ function riddleChallenge() {
     } else {
       alert("❌ Incorrect... Try again!");
     }
+  }
+}
+function startTreasureHunt() {
+  const chests = ["Gold", "Empty", "Empty"];
+  // Shuffle the chests
+  chests.sort(() => Math.random() - 0.5);
+  
+  const choice = prompt("Pick a chest: 1, 2, or 3!");
+
+  if (choice === "1" || choice === "2" || choice === "3") {
+    const selected = chests[parseInt(choice) - 1];
+    if (selected === "Gold") {
+      alert("🎉 You found the gold! You're rich!");
+    } else {
+      alert("🪨 Empty! Better luck next time...");
+    }
+  } else {
+    alert("⛔ Please pick 1, 2, or 3!");
   }
 }
 
