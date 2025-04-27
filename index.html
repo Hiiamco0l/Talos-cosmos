@@ -143,7 +143,7 @@
     <p>Welcome, traveler, to the astral plane...</p>
     <div class="button-container">
       <button onclick="showPage('dice')">🎲 Dice Roller</button>
-      <button onclick="alert('Name Generator coming soon!')">🧙 Name Generator</button>
+      <button onclick="showPage('map')">🗺️ Map</button>
       <button onclick="alert('Monster Lookup coming soon!')">🐉 Monster Lookup</button>
       <button onclick="alert('Tavern Generator coming soon!')">🍻 Tavern Generator</button>
     </div>
@@ -164,6 +164,18 @@
       <button onclick="goHome()">⬅️ Back to Home</button>
     </div>
   </div>
+  
+  <div class="content hidden" id="map">
+  <h2>Map</h2>
+  <canvas id="mapCanvas" width="800" height="600" style="background: #fff; border: 2px solid #d0d0ff;"></canvas>
+  
+  <div style="margin-top: 20px;">
+    <button onclick="toggleTool()">🖌️ Toggle Draw/Erase</button>
+    <button onclick="clearCanvas()">🧹 Clear Map</button>
+    <button onclick="goHome()">⬅️ Back to Home</button>
+  </div>
+</div>
+
 
   <script>
     // Page navigation
@@ -193,6 +205,40 @@
         clickedDice.classList.remove('rolling');
       }, 800);
     }
+// Map Drawing
+let drawing = false;
+let erasing = false;
+const mapCanvas = document.getElementById('mapCanvas');
+const mapCtx = mapCanvas.getContext('2d');
+
+if (mapCanvas) {
+  mapCanvas.addEventListener('mousedown', () => drawing = true);
+  mapCanvas.addEventListener('mouseup', () => drawing = false);
+  mapCanvas.addEventListener('mousemove', drawOnMap);
+}
+
+function drawOnMap(event) {
+  if (!drawing) return;
+  
+  const rect = mapCanvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+
+  mapCtx.fillStyle = erasing ? '#ffffff' : '#000000';
+  mapCtx.beginPath();
+  mapCtx.arc(x, y, erasing ? 10 : 2, 0, Math.PI * 2);
+  mapCtx.fill();
+}
+
+function toggleTool() {
+  erasing = !erasing;
+  alert(erasing ? "Eraser On" : "Draw Mode On");
+}
+
+function clearCanvas() {
+  mapCtx.fillStyle = "#ffffff";
+  mapCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height);
+}
 
     // Starfield animation
     const canvas = document.getElementById('starfield');
