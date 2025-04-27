@@ -6,18 +6,23 @@
   <title>Tale of Talos Cosmos</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body {
+    body, html {
       margin: 0;
       padding: 0;
       font-family: 'Cinzel', serif;
-      background: radial-gradient(ellipse at center, #0b0c2a 0%, #000000 100%);
+      background: black;
       color: #d0d0ff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      overflow-x: hidden;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    canvas#starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
     }
 
     header {
@@ -126,6 +131,8 @@
 </head>
 
 <body>
+  <canvas id="starfield"></canvas>
+
   <header>Tale of Talos Cosmos</header>
 
   <div class="content" id="home">
@@ -155,6 +162,7 @@
   </div>
 
   <script>
+    // --- Navigation ---
     function showPage(pageId) {
       document.getElementById('home').classList.add('hidden');
       document.getElementById('dice').classList.add('hidden');
@@ -183,6 +191,59 @@
         clickedDice.classList.remove('rolling');
       }, 800);
     }
+
+    // --- Stars animation ---
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+
+    let width, height, stars;
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      createStars();
+    }
+
+    function createStars() {
+      stars = [];
+      for (let i = 0; i < 200; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 2,
+          speed: Math.random() * 0.5 + 0.2
+        });
+      }
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'white';
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    function animateStars() {
+      stars.forEach(star => {
+        star.y += star.speed;
+        if (star.y > height) {
+          star.y = 0;
+          star.x = Math.random() * width;
+        }
+      });
+      drawStars();
+      requestAnimationFrame(animateStars);
+    }
+
+    window.addEventListener('resize', resize);
+
+    resize();
+    animateStars();
   </script>
 </body>
 </html>
