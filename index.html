@@ -6,225 +6,192 @@
   <title>Tale of Talos Cosmos</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    html, body {
-      height: 100%;
-      font-family: 'Cinzel', serif;
-      overflow: hidden;
-      background: #000; /* fallback background */
-      color: #d0d0ff;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    #starfield {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      width: 100%;
-      height: 100%;
+    body {
+      font-family: 'Cinzel', serif;
+      background: radial-gradient(ellipse at center, #0b0c2a 0%, #000000 100%);
+      color: #dcdcff;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
     }
 
     header {
       text-align: center;
-      padding: 50px 20px 20px 20px;
-      font-size: 3em;
+      padding: 80px 20px 20px;
+      font-size: 3rem;
       color: #c0a0ff;
       text-shadow: 0 0 10px #c0a0ff, 0 0 20px #c0a0ff;
-      position: relative;
-      z-index: 2;
-    }
-
-    .content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding-top: 30px;
       z-index: 2;
       position: relative;
     }
 
-    .button-container {
-      margin-top: 30px;
+    nav {
       display: flex;
+      justify-content: center;
       gap: 20px;
       flex-wrap: wrap;
-      justify-content: center;
+      margin-top: 40px;
+      z-index: 2;
+      position: relative;
     }
 
-    button {
+    nav button {
       background: #2b2b50;
       border: 2px solid #d0d0ff;
       color: #d0d0ff;
       padding: 15px 30px;
       font-size: 1.2em;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: background 0.3s, transform 0.3s;
       box-shadow: 0 0 10px #2b2b50;
     }
 
-    button:hover {
-      background: #3d3d70;
+    nav button:hover {
+      background: #4a4a80;
       transform: scale(1.05);
       box-shadow: 0 0 20px #5a5acc;
     }
 
-    .hidden {
+    main {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 1.5em;
+      padding: 0 20px;
+      z-index: 2;
+      position: relative;
+    }
+
+    #stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      top: 0;
+      left: 0;
+    }
+
+    /* Dice Roller Popup */
+    #diceRoller {
       display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1a1a30;
+      padding: 30px;
+      border: 2px solid #d0d0ff;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #5a5acc;
+      z-index: 5;
     }
 
-    .dice-container {
-      margin-top: 30px;
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
+    #diceRoller h2 {
+      margin-bottom: 20px;
+      font-size: 2em;
     }
 
-    .dice {
+    .dice-buttons button {
+      margin: 10px;
+      padding: 10px 20px;
       background: #2b2b50;
       border: 2px solid #d0d0ff;
-      padding: 20px 30px;
-      font-size: 1.5em;
-      border-radius: 12px;
+      color: #d0d0ff;
+      border-radius: 8px;
+      font-size: 1.1em;
       cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 0 15px #2b2b50;
+      transition: background 0.3s, transform 0.3s;
     }
 
-    .dice:hover {
-      background: #3d3d70;
+    .dice-buttons button:hover {
+      background: #4a4a80;
       transform: scale(1.1);
-      box-shadow: 0 0 20px #5a5acc;
     }
 
-    .dice.rolling {
-      animation: shake 0.8s;
+    #result {
+      margin-top: 20px;
+      font-size: 1.5em;
     }
 
-    @keyframes shake {
-      0% { transform: translate(1px, 1px) rotate(0deg); }
-      10% { transform: translate(-1px, -2px) rotate(-1deg); }
-      20% { transform: translate(-3px, 0px) rotate(1deg); }
-      30% { transform: translate(3px, 2px) rotate(0deg); }
-      40% { transform: translate(1px, -1px) rotate(1deg); }
-      50% { transform: translate(-1px, 2px) rotate(-1deg); }
-      60% { transform: translate(-3px, 1px) rotate(0deg); }
-      70% { transform: translate(3px, 1px) rotate(-1deg); }
-      80% { transform: translate(-1px, -1px) rotate(1deg); }
-      90% { transform: translate(1px, 2px) rotate(0deg); }
-      100% { transform: translate(1px, -2px) rotate(-1deg); }
+    #close {
+      margin-top: 20px;
+      background: crimson;
     }
 
-    .result {
-      margin-top: 30px;
-      font-size: 2em;
-      text-align: center;
-      text-shadow: 0 0 10px #c0a0ff;
-    }
-
-    .back-button {
-      margin-top: 30px;
+    canvas {
+      display: block;
     }
   </style>
 </head>
-
 <body>
-  <canvas id="starfield"></canvas>
+
+  <div id="stars">
+    <canvas id="starCanvas"></canvas>
+  </div>
 
   <header>Tale of Talos Cosmos</header>
 
-  <div class="content" id="home">
-    <p>Welcome, traveler, to the astral plane...</p>
-    <div class="button-container">
-      <button onclick="showPage('dice')">🎲 Dice Roller</button>
-      <button onclick="alert('Name Generator coming soon!')">🧙 Name Generator</button>
-      <button onclick="alert('Monster Lookup coming soon!')">🐉 Monster Lookup</button>
-      <button onclick="alert('Tavern Generator coming soon!')">🍻 Tavern Generator</button>
-    </div>
-  </div>
+  <nav>
+    <button onclick="openDiceRoller()">Dice Roller</button>
+    <button onclick="alert('Name Generator coming soon! ✨')">Name Generator</button>
+    <button onclick="alert('Monster Lookup coming soon! 🐉')">Monster Lookup</button>
+    <button onclick="alert('Tavern Generator coming soon! 🍻')">Tavern Generator</button>
+  </nav>
 
-  <div class="content hidden" id="dice">
-    <h2>Dice Roller</h2>
-    <div class="dice-container">
-      <div class="dice" onclick="rollDice(4)">D4</div>
-      <div class="dice" onclick="rollDice(6)">D6</div>
-      <div class="dice" onclick="rollDice(8)">D8</div>
-      <div class="dice" onclick="rollDice(10)">D10</div>
-      <div class="dice" onclick="rollDice(12)">D12</div>
-      <div class="dice" onclick="rollDice(20)">D20</div>
+  <main>
+    <p>Welcome, traveler of the Astral Plane. Your adventure begins soon...</p>
+  </main>
+
+  <!-- Dice Roller Popup -->
+  <div id="diceRoller">
+    <h2>Roll the Dice 🎲</h2>
+    <div class="dice-buttons">
+      <button onclick="rollDice(4)">d4</button>
+      <button onclick="rollDice(6)">d6</button>
+      <button onclick="rollDice(8)">d8</button>
+      <button onclick="rollDice(10)">d10</button>
+      <button onclick="rollDice(12)">d12</button>
+      <button onclick="rollDice(20)">d20</button>
     </div>
-    <div class="result" id="result">Click a dice to roll!</div>
-    <div class="back-button">
-      <button onclick="goHome()">⬅️ Back to Home</button>
-    </div>
+    <div id="result"></div>
+    <button id="close" onclick="closeDiceRoller()">Close</button>
   </div>
 
   <script>
-    // Page navigation
-    function showPage(pageId) {
-      document.getElementById('home').classList.add('hidden');
-      document.getElementById('dice').classList.add('hidden');
-      document.getElementById(pageId).classList.remove('hidden');
-    }
-
-    function goHome() {
-      document.getElementById('home').classList.remove('hidden');
-      document.getElementById('dice').classList.add('hidden');
-    }
-
-    function rollDice(sides) {
-      const diceElements = document.querySelectorAll('.dice');
-      diceElements.forEach(dice => dice.classList.remove('rolling'));
-      const resultDiv = document.getElementById('result');
-      resultDiv.textContent = "Rolling...";
-
-      const clickedDice = event.target;
-      clickedDice.classList.add('rolling');
-
-      setTimeout(() => {
-        const roll = Math.floor(Math.random() * sides) + 1;
-        resultDiv.textContent = 🎲 You rolled a ${roll} on a D${sides}!;
-        clickedDice.classList.remove('rolling');
-      }, 800);
-    }
-
-    // Starfield animation
-    const canvas = document.getElementById('starfield');
+    // Stars Background
+    const canvas = document.getElementById('starCanvas');
     const ctx = canvas.getContext('2d');
-    let width, height, stars;
+    let width, height;
+    let stars = [];
 
-    function resize() {
+    function resizeCanvas() {
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      createStars();
     }
 
     function createStars() {
       stars = [];
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 150; i++) {
         stars.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          size: Math.random() * 2,
-          speed: Math.random() * 0.5 + 0.3
+          radius: Math.random() * 1.5,
+          alpha: Math.random(),
+          speed: Math.random() * 0.5 + 0.2
         });
       }
     }
 
     function drawStars() {
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'white';
       stars.forEach(star => {
         ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
         ctx.fill();
       });
     }
@@ -241,10 +208,29 @@
       requestAnimationFrame(animateStars);
     }
 
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      createStars();
+    });
 
-    resize();
+    resizeCanvas();
+    createStars();
     animateStars();
+
+    // Dice Roller Logic
+    function openDiceRoller() {
+      document.getElementById('diceRoller').style.display = 'block';
+    }
+
+    function closeDiceRoller() {
+      document.getElementById('diceRoller').style.display = 'none';
+    }
+
+    function rollDice(sides) {
+      const result = Math.floor(Math.random() * sides) + 1;
+      document.getElementById('result').innerText = `🎲 You rolled: ${result}`;
+    }
   </script>
+
 </body>
 </html>
