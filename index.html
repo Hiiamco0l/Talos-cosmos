@@ -35,7 +35,7 @@
     <div class="button-container">
       <button onclick="showPage('dice')">🎲 Dice Roller</button>
       <button onclick="showPage('map')">🗺️ Map</button>
-      <button onclick="alert('Monster Lookup coming soon!')">🐉 Monster Lookup</button>
+      <button onclick="showPage('namegen')">📝 Name Generator</button>
       <button onclick="alert('Tavern Generator coming soon!')">🍻 Tavern Generator</button>
     </div>
   </div>
@@ -63,6 +63,15 @@
       <button onclick="goHome()">⬅️ Back to Home</button>
     </div>
   </div>
+  <div class="content hidden" id="namegen">
+  <h2>Name Generator</h2>
+  <p id="generatedName" style="margin-top: 20px; font-size: 1.5em;">Click the button to generate a name!</p>
+  <div style="margin-top: 20px;">
+    <button onclick="generateName()">🎲 Generate Name</button>
+    <button onclick="goHome()">⬅️ Back to Home</button>
+  </div>
+</div>
+
   <script>
 // Check if userName is already saved
 let userName = localStorage.getItem('userName');
@@ -182,6 +191,24 @@ function drawOnMap(e) {
   localStorage.removeItem('userName');
   location.reload();
 }
+  // Name Generator Logic
+  function generateName() {
+    const names = [
+      "Aelar", "Branwen", "Caladrel", "Dorian", "Eldrin", "Faelana", "Galrik", "Helmira", "Isolde", "Jorvan",
+      "Kaelen", "Lyra", "Morthos", "Nerwen", "Orik", "Peregrin", "Quenya", "Roderic", "Sylvara", "Tamsin",
+      "Ulric", "Vaelin", "Wysteria", "Xander", "Ysolde", "Zanros", "Arannis", "Belwyn", "Cassian", "Druantia",
+      "Emric", "Fendrel", "Gwyneth", "Harkin", "Ilvara", "Jareth", "Kethril", "Liora", "Mirael", "Nym",
+      "Olorin", "Pyria", "Quorin", "Riven", "Seraphine", "Torin", "Umbra", "Veylin", "Wrenna", "Xanthos",
+      "Ysara", "Zorath", "Alaric", "Bryn", "Caelum", "Delsaran", "Eira", "Fenris", "Galen", "Halcyon",
+      "Ithil", "Jaspen", "Kallista", "Leoric", "Melwas", "Nyssa", "Orin", "Phaelon", "Quintessa", "Rurik",
+      "Saphira", "Tavros", "Uriel", "Vespera", "Wulfric", "Xyla", "Yorick", "Zephyra", "Anwyn", "Balthazar",
+      "Corvin", "Darian", "Elowen", "Faelar", "Gavric", "Hadriel", "Isilme", "Jax", "Kaida", "Lorcan",
+      "Maelis", "Nysa", "Osric", "Petra", "Quillian", "Rowan", "Selene", "Thane", "Ulrica", "Valko"
+    ];
+    const randomIndex = Math.floor(Math.random() * names.length);
+    const name = names[randomIndex];
+    document.getElementById('generatedName').textContent = `🔮 Your name is: ${name}!`;
+  }
 
   </script>
 </body>
