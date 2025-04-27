@@ -15,10 +15,9 @@
       height: 100%;
       font-family: 'Cinzel', serif;
       overflow: hidden;
-      background: #000; /* fallback background */
+      background: #000;
       color: #d0d0ff;
     }
-
     #starfield {
       position: absolute;
       top: 0;
@@ -27,7 +26,6 @@
       width: 100%;
       height: 100%;
     }
-
     header {
       text-align: center;
       padding: 50px 20px 20px 20px;
@@ -37,7 +35,6 @@
       position: relative;
       z-index: 2;
     }
-
     .content {
       display: flex;
       flex-direction: column;
@@ -47,7 +44,6 @@
       z-index: 2;
       position: relative;
     }
-
     .button-container {
       margin-top: 30px;
       display: flex;
@@ -55,7 +51,6 @@
       flex-wrap: wrap;
       justify-content: center;
     }
-
     button {
       background: #2b2b50;
       border: 2px solid #d0d0ff;
@@ -67,17 +62,14 @@
       transition: 0.3s;
       box-shadow: 0 0 10px #2b2b50;
     }
-
     button:hover {
       background: #3d3d70;
       transform: scale(1.05);
       box-shadow: 0 0 20px #5a5acc;
     }
-
     .hidden {
       display: none;
     }
-
     .dice-container {
       margin-top: 30px;
       display: flex;
@@ -85,7 +77,6 @@
       flex-wrap: wrap;
       justify-content: center;
     }
-
     .dice {
       background: #2b2b50;
       border: 2px solid #d0d0ff;
@@ -96,17 +87,14 @@
       transition: 0.3s;
       box-shadow: 0 0 15px #2b2b50;
     }
-
     .dice:hover {
       background: #3d3d70;
       transform: scale(1.1);
       box-shadow: 0 0 20px #5a5acc;
     }
-
     .dice.rolling {
       animation: shake 0.8s;
     }
-
     @keyframes shake {
       0% { transform: translate(1px, 1px) rotate(0deg); }
       10% { transform: translate(-1px, -2px) rotate(-1deg); }
@@ -120,16 +108,21 @@
       90% { transform: translate(1px, 2px) rotate(0deg); }
       100% { transform: translate(1px, -2px) rotate(-1deg); }
     }
-
     .result {
       margin-top: 30px;
       font-size: 2em;
       text-align: center;
       text-shadow: 0 0 10px #c0a0ff;
     }
-
     .back-button {
       margin-top: 30px;
+    }
+    .ship-map {
+      margin-top: 30px;
+      max-width: 90%;
+      border: 2px solid #d0d0ff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #5a5acc;
     }
   </style>
 </head>
@@ -143,7 +136,7 @@
     <p>Welcome, traveler, to the astral plane...</p>
     <div class="button-container">
       <button onclick="showPage('dice')">🎲 Dice Roller</button>
-      <button onclick="alert('Name Generator coming soon!')">🧙 Name Generator</button>
+      <button onclick="showPage('shipmap')">🚀 Ship Map</button>
       <button onclick="alert('Monster Lookup coming soon!')">🐉 Monster Lookup</button>
       <button onclick="alert('Tavern Generator coming soon!')">🍻 Tavern Generator</button>
     </div>
@@ -165,17 +158,26 @@
     </div>
   </div>
 
+  <div class="content hidden" id="shipmap">
+    <h2>Ship Map</h2>
+    <img src="download.jpg" alt="Ship Map" class="ship-map">
+    <div class="back-button">
+      <button onclick="goHome()">⬅️ Back to Home</button>
+    </div>
+  </div>
+
   <script>
-    // Page navigation
     function showPage(pageId) {
       document.getElementById('home').classList.add('hidden');
       document.getElementById('dice').classList.add('hidden');
+      document.getElementById('shipmap').classList.add('hidden');
       document.getElementById(pageId).classList.remove('hidden');
     }
 
     function goHome() {
       document.getElementById('home').classList.remove('hidden');
       document.getElementById('dice').classList.add('hidden');
+      document.getElementById('shipmap').classList.add('hidden');
     }
 
     function rollDice(sides) {
@@ -194,7 +196,7 @@
       }, 800);
     }
 
-    // Starfield animation
+    // Starfield background
     const canvas = document.getElementById('starfield');
     const ctx = canvas.getContext('2d');
     let width, height, stars;
