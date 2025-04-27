@@ -28,7 +28,7 @@
   <canvas id="starfield"></canvas>
   <header>Tale of Talos Cosmos</header>
   <div class="content" id="home">
-    <p>Welcome, traveler, to the astral plane...</p>
+<p id="welcomeText">Loading...</p>
     <div class="button-container">
       <button onclick="showPage('dice')">🎲 Dice Roller</button>
       <button onclick="showPage('map')">🗺️ Map</button>
@@ -61,6 +61,23 @@
     </div>
   </div>
   <script>
+  // Ask for user's name and set custom welcome
+let userName = prompt("Greetings traveler, what is your name?");
+
+const welcomeText = document.getElementById('welcomeText');
+
+if (userName) {
+  if (userName.trim().toLowerCase() === 'eddie') {
+    welcomeText.textContent = "Welcome Dungeon Master.";
+  } else if (userName.trim().toLowerCase() === 'calico') {
+    welcomeText.textContent = "Welcome Captain.";
+  } else {
+    welcomeText.textContent = `Welcome, ${userName.trim()}, to the astral plane...`;
+  }
+} else {
+  welcomeText.textContent = "Welcome, traveler, to the astral plane...";
+}
+
     function showPage(pageId) {
       document.getElementById('home').classList.add('hidden');
       document.getElementById('dice').classList.add('hidden');
