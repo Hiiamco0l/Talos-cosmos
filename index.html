@@ -29,6 +29,9 @@
   <header>Tale of Talos Cosmos</header>
   <div class="content" id="home">
 <p id="welcomeText">Loading...</p>
+<div style="margin-top: 20px;">
+  <button onclick="changeUser()">Change User</button>
+</div>
     <div class="button-container">
       <button onclick="showPage('dice')">🎲 Dice Roller</button>
       <button onclick="showPage('map')">🗺️ Map</button>
@@ -175,6 +178,11 @@ function drawOnMap(e) {
     window.addEventListener('resize', resize);
     resize();
     animateStars();
+	function changeUser() {
+  localStorage.removeItem('userName');
+  location.reload();
+}
+
   </script>
 </body>
 </html>
