@@ -6,26 +6,12 @@
   <title>Tale of Talos Cosmos</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    html, body {
-      height: 100%;
-      font-family: 'Cinzel', serif;
-      overflow: hidden;
-      background: #000;
-      color: #d0d0ff;
-    }
-    #starfield {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      width: 100%;
-      height: 100%;
-    }
+    /* Reset and basic styles */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; font-family: 'Cinzel', serif; overflow: hidden; background: #000; color: #d0d0ff; }
+
+    #starfield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+
     header {
       text-align: center;
       padding: 50px 20px 20px 20px;
@@ -67,9 +53,8 @@
       transform: scale(1.05);
       box-shadow: 0 0 20px #5a5acc;
     }
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
+
     .dice-container {
       margin-top: 30px;
       display: flex;
@@ -114,9 +99,7 @@
       text-align: center;
       text-shadow: 0 0 10px #c0a0ff;
     }
-    .back-button {
-      margin-top: 30px;
-    }
+    .back-button { margin-top: 30px; }
   </style>
 </head>
 
@@ -158,7 +141,6 @@
       document.getElementById('dice').classList.add('hidden');
       document.getElementById(pageId).classList.remove('hidden');
     }
-
     function goHome() {
       document.getElementById('home').classList.remove('hidden');
       document.getElementById('dice').classList.add('hidden');
@@ -181,9 +163,9 @@
       }, 800);
     }
 
-    // Open Map Drawing Page
+    // Open Map Drawer
     function openMap() {
-      const mapWindow = window.open("", "_blank", "width=800,height=600");
+      const mapWindow = window.open("", "_blank", "width=1000,height=800");
       mapWindow.document.write(`
         <!DOCTYPE html>
         <html lang="en">
@@ -191,32 +173,29 @@
           <title>Map Drawer</title>
           <style>
             body { margin: 0; overflow: hidden; background: #000; }
-            #mapCanvas { background: #fff; display: block; cursor: crosshair; }
             #toolbar {
               position: fixed;
               top: 10px;
               left: 50%;
               transform: translateX(-50%);
               background: rgba(0,0,0,0.7);
-              padding: 10px 20px;
-              border-radius: 10px;
+              padding: 10px;
+              border-radius: 8px;
+              z-index: 10;
               display: flex;
               gap: 10px;
-              align-items: center;
-              z-index: 10;
             }
             button {
-              padding: 8px 15px;
-              font-size: 1em;
-              cursor: pointer;
               background: #2b2b50;
-              color: #d0d0ff;
               border: none;
+              color: #d0d0ff;
+              padding: 8px 15px;
               border-radius: 5px;
+              cursor: pointer;
+              font-size: 1em;
             }
-            button:hover {
-              background: #3d3d70;
-            }
+            button:hover { background: #3d3d70; }
+            canvas { background: #fff; display: block; cursor: crosshair; }
           </style>
         </head>
         <body>
@@ -239,8 +218,14 @@
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
 
-            canvas.addEventListener('mousedown', () => drawing = true);
-            canvas.addEventListener('mouseup', () => drawing = false);
+            canvas.addEventListener('mousedown', () => {
+              drawing = true;
+              ctx.beginPath();
+            });
+            canvas.addEventListener('mouseup', () => {
+              drawing = false;
+              ctx.beginPath();
+            });
             canvas.addEventListener('mousemove', draw);
 
             function draw(e) {
@@ -254,14 +239,8 @@
               ctx.moveTo(e.clientX, e.clientY);
             }
 
-            function pen() {
-              erasing = false;
-            }
-
-            function eraser() {
-              erasing = true;
-            }
-
+            function pen() { erasing = false; }
+            function eraser() { erasing = true; }
             function clearCanvas() {
               ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
@@ -271,17 +250,15 @@
       `);
     }
 
-    // Starfield
+    // Starfield background
     document.addEventListener('DOMContentLoaded', () => {
       const canvas = document.getElementById('starfield');
       const ctx = canvas.getContext('2d');
-      let width, height, stars = [];
+      let stars = [];
 
-      function resize() {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         createStars();
       }
 
@@ -289,8 +266,8 @@
         stars = [];
         for (let i = 0; i < 200; i++) {
           stars.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
             size: Math.random() * 2,
             speed: Math.random() * 0.5 + 0.3
           });
@@ -298,7 +275,7 @@
       }
 
       function drawStars() {
-        ctx.clearRect(0, 0, width, height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = 'white';
         stars.forEach(star => {
           ctx.beginPath();
@@ -310,17 +287,17 @@
       function animateStars() {
         stars.forEach(star => {
           star.y += star.speed;
-          if (star.y > height) {
+          if (star.y > canvas.height) {
             star.y = 0;
-            star.x = Math.random() * width;
+            star.x = Math.random() * canvas.width;
           }
         });
         drawStars();
         requestAnimationFrame(animateStars);
       }
 
-      window.addEventListener('resize', resize);
-      resize();
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
       animateStars();
     });
   </script>
