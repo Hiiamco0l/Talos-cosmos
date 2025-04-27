@@ -94,21 +94,29 @@
     mapCanvas.addEventListener('mouseup', stopDrawing);
     mapCanvas.addEventListener('mouseout', stopDrawing);
     mapCanvas.addEventListener('mousemove', drawOnMap);
-    function startDrawing(e) { drawing = true; drawOnMap(e); }
-    function stopDrawing() { drawing = false; mapCtx.beginPath(); }
-    function drawOnMap(e) {
-      if (!drawing) return;
-      const rect = mapCanvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      mapCtx.lineWidth = erasing ? 20 : 3;
-      mapCtx.lineCap = 'round';
-      mapCtx.strokeStyle = erasing ? '#ffffff' : '#000000';
-      mapCtx.lineTo(x, y);
-      mapCtx.stroke();
-      mapCtx.beginPath();
-      mapCtx.moveTo(x, y);
-    }
+    function startDrawing(e) {
+  drawing = true;
+  const rect = mapCanvas.getBoundingClientRect();
+  mapCtx.beginPath();
+  mapCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+}
+
+function stopDrawing() {
+  drawing = false;
+}
+
+function drawOnMap(e) {
+  if (!drawing) return;
+  const rect = mapCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  mapCtx.lineWidth = erasing ? 20 : 3;
+  mapCtx.lineCap = 'round';
+  mapCtx.strokeStyle = erasing ? '#ffffff' : '#000000';
+  mapCtx.lineTo(x, y);
+  mapCtx.stroke();
+}
+
     function toggleTool() { erasing = !erasing; alert(erasing ? "Eraser On" : "Draw Mode On"); }
     function clearCanvas() { mapCtx.fillStyle = "#ffffff"; mapCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height); }
     // Starfield
