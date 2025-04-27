@@ -2,219 +2,167 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tale of Talos Cosmos</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * {
+    body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-    html, body {
-      height: 100%;
       font-family: 'Cinzel', serif;
-      overflow: hidden;
-      background: #000; /* fallback background */
+      background: radial-gradient(ellipse at center, #0b0c2a 0%, #000000 100%);
       color: #d0d0ff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
     }
 
-    #starfield {
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: black;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    canvas {
+      display: block;
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 0;
-      width: 100%;
-      height: 100%;
     }
 
     header {
       text-align: center;
-      padding: 50px 20px 20px 20px;
+      padding: 100px 20px 50px 20px;
       font-size: 3em;
+      font-weight: 700;
       color: #c0a0ff;
+      z-index: 2;
+      position: relative;
       text-shadow: 0 0 10px #c0a0ff, 0 0 20px #c0a0ff;
-      position: relative;
-      z-index: 2;
     }
 
-    .content {
+    nav {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding-top: 30px;
-      z-index: 2;
-      position: relative;
-    }
-
-    .button-container {
-      margin-top: 30px;
-      display: flex;
+      justify-content: center;
       gap: 20px;
       flex-wrap: wrap;
-      justify-content: center;
+      margin-top: 20px;
+      z-index: 2;
+      position: relative;
     }
 
-    button {
+    nav button {
       background: #2b2b50;
       border: 2px solid #d0d0ff;
       color: #d0d0ff;
       padding: 15px 30px;
       font-size: 1.2em;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: background 0.3s, transform 0.3s;
       box-shadow: 0 0 10px #2b2b50;
     }
 
-    button:hover {
+    nav button:hover {
       background: #3d3d70;
       transform: scale(1.05);
       box-shadow: 0 0 20px #5a5acc;
     }
 
-    .hidden {
-      display: none;
-    }
-
-    .dice-container {
-      margin-top: 30px;
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .dice {
-      background: #2b2b50;
-      border: 2px solid #d0d0ff;
-      padding: 20px 30px;
-      font-size: 1.5em;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 0 15px #2b2b50;
-    }
-
-    .dice:hover {
-      background: #3d3d70;
-      transform: scale(1.1);
-      box-shadow: 0 0 20px #5a5acc;
-    }
-
-    .dice.rolling {
-      animation: shake 0.8s;
-    }
-
-    @keyframes shake {
-      0% { transform: translate(1px, 1px) rotate(0deg); }
-      10% { transform: translate(-1px, -2px) rotate(-1deg); }
-      20% { transform: translate(-3px, 0px) rotate(1deg); }
-      30% { transform: translate(3px, 2px) rotate(0deg); }
-      40% { transform: translate(1px, -1px) rotate(1deg); }
-      50% { transform: translate(-1px, 2px) rotate(-1deg); }
-      60% { transform: translate(-3px, 1px) rotate(0deg); }
-      70% { transform: translate(3px, 1px) rotate(-1deg); }
-      80% { transform: translate(-1px, -1px) rotate(1deg); }
-      90% { transform: translate(1px, 2px) rotate(0deg); }
-      100% { transform: translate(1px, -2px) rotate(-1deg); }
-    }
-
-    .result {
-      margin-top: 30px;
-      font-size: 2em;
+    main {
       text-align: center;
-      text-shadow: 0 0 10px #c0a0ff;
+      margin-top: 50px;
+      font-size: 1.5em;
+      z-index: 2;
+      position: relative;
     }
 
-    .back-button {
+    #dice-result {
+      margin-top: 20px;
+      font-size: 2em;
+      color: #c0a0ff;
+    }
+
+    #ship-map-container {
+      display: none;
       margin-top: 30px;
+      text-align: center;
+    }
+
+    #ship-map-container img {
+      max-width: 90%;
+      height: auto;
+      border: 2px solid #d0d0ff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #5a5acc;
+      transition: transform 0.5s ease;
+    }
+
+    #ship-map-container img:hover {
+      transform: scale(1.02);
     }
   </style>
 </head>
-
 <body>
-  <canvas id="starfield"></canvas>
-
-  <header>Tale of Talos Cosmos</header>
-
-  <div class="content" id="home">
-    <p>Welcome, traveler, to the astral plane...</p>
-    <div class="button-container">
-      <button onclick="showPage('dice')">🎲 Dice Roller</button>
-      <button onclick="alert('Name Generator coming soon!')">🧙 Name Generator</button>
-      <button onclick="alert('Monster Lookup coming soon!')">🐉 Monster Lookup</button>
-      <button onclick="alert('Tavern Generator coming soon!')">🍻 Tavern Generator</button>
-    </div>
+  <div class="stars">
+    <canvas id="star-canvas"></canvas>
   </div>
 
-  <div class="content hidden" id="dice">
-    <h2>Dice Roller</h2>
-    <div class="dice-container">
-      <div class="dice" onclick="rollDice(4)">D4</div>
-      <div class="dice" onclick="rollDice(6)">D6</div>
-      <div class="dice" onclick="rollDice(8)">D8</div>
-      <div class="dice" onclick="rollDice(10)">D10</div>
-      <div class="dice" onclick="rollDice(12)">D12</div>
-      <div class="dice" onclick="rollDice(20)">D20</div>
+  <header>
+    Tale of Talos Cosmos
+  </header>
+
+  <nav>
+    <button onclick="showDiceRoller()">Dice Roller</button>
+    <button onclick="showShipMap()">Ship Map</button>
+  </nav>
+
+  <main>
+    <p>Welcome, traveler, to the astral plane... Choose your tool to begin your tale.</p>
+
+    <div id="dice-roller" style="margin-top: 30px;">
+      <button onclick="rollDice(4)">Roll d4</button>
+      <button onclick="rollDice(6)">Roll d6</button>
+      <button onclick="rollDice(8)">Roll d8</button>
+      <button onclick="rollDice(10)">Roll d10</button>
+      <button onclick="rollDice(12)">Roll d12</button>
+      <button onclick="rollDice(20)">Roll d20</button>
+      <div id="dice-result"></div>
     </div>
-    <div class="result" id="result">Click a dice to roll!</div>
-    <div class="back-button">
-      <button onclick="goHome()">⬅️ Back to Home</button>
+
+    <div id="ship-map-container">
+      <img src="ship-map.jpg" alt="Ship Map">
     </div>
-  </div>
+  </main>
 
   <script>
-    // Page navigation
-    function showPage(pageId) {
-      document.getElementById('home').classList.add('hidden');
-      document.getElementById('dice').classList.add('hidden');
-      document.getElementById(pageId).classList.remove('hidden');
-    }
-
-    function goHome() {
-      document.getElementById('home').classList.remove('hidden');
-      document.getElementById('dice').classList.add('hidden');
-    }
-
-    function rollDice(sides) {
-      const diceElements = document.querySelectorAll('.dice');
-      diceElements.forEach(dice => dice.classList.remove('rolling'));
-      const resultDiv = document.getElementById('result');
-      resultDiv.textContent = "Rolling...";
-
-      const clickedDice = event.target;
-      clickedDice.classList.add('rolling');
-
-      setTimeout(() => {
-        const roll = Math.floor(Math.random() * sides) + 1;
-        resultDiv.textContent = `🎲 You rolled a ${roll} on a D${sides}!`;
-        clickedDice.classList.remove('rolling');
-      }, 800);
-    }
-
-    // Starfield animation
-    const canvas = document.getElementById('starfield');
+    // Star Background
+    const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
-    let width, height, stars;
+    let width, height;
+    let stars = [];
 
     function resize() {
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      createStars();
     }
 
     function createStars() {
       stars = [];
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 300; i++) {
         stars.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          size: Math.random() * 2,
-          speed: Math.random() * 0.5 + 0.3
+          radius: Math.random() * 1.5,
+          alpha: Math.random()
         });
       }
     }
@@ -223,36 +171,53 @@
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = 'white';
       stars.forEach(star => {
+        ctx.globalAlpha = star.alpha;
         ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
         ctx.fill();
       });
+      ctx.globalAlpha = 1;
     }
 
-    function animateStars() {
+    function animate() {
+      drawStars();
       stars.forEach(star => {
-        star.y += star.speed;
+        star.y += 0.05;
         if (star.y > height) {
           star.y = 0;
           star.x = Math.random() * width;
         }
       });
-      drawStars();
-      requestAnimationFrame(animateStars);
+      requestAnimationFrame(animate);
     }
 
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', () => {
+      resize();
+      createStars();
+    });
 
     resize();
-    animateStars();
-  </script>
-  <audio id="space-music" autoplay loop hidden>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_57c940b5cc.mp3?filename=deep-space-ambient-110624.mp3" type="audio/mpeg">
-</audio>
+    createStars();
+    animate();
 
-<script>
-  const music = document.getElementById('space-music');
-  music.volume = 0.2; // 20% volume
-</script>
+    // Dice Roller
+    function rollDice(sides) {
+      const result = Math.floor(Math.random() * sides) + 1;
+      const diceResult = document.getElementById('dice-result');
+      diceResult.textContent = `🎲 You rolled a d${sides} and got: ${result}`;
+    }
+
+    // Show Dice Roller
+    function showDiceRoller() {
+      document.getElementById('dice-roller').style.display = 'block';
+      document.getElementById('ship-map-container').style.display = 'none';
+    }
+
+    // Show Ship Map
+    function showShipMap() {
+      document.getElementById('dice-roller').style.display = 'none';
+      document.getElementById('ship-map-container').style.display = 'block';
+    }
+  </script>
 </body>
 </html>
