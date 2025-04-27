@@ -37,7 +37,8 @@
       <button onclick="showPage('map')">🗺️ Map</button>
       <button onclick="showPage('namegen')">📝 Name Generator</button> 
 	  <button onclick="riddleChallenge()">Solve the Riddle</button>
-	  <button onclick="startTreasureHunt()">🪙 Treasure Hunt</button>
+	  <button onclick="showPage('treasure')">🪙 Treasure Hunt</button>
+
     </div>
   </div>
   <div class="content hidden" id="dice">
@@ -72,6 +73,19 @@
     <button onclick="goHome()">⬅️ Back to Home</button>
   </div>
 </div>
+<div class="content hidden" id="treasure">
+  <h2>Treasure Hunt!</h2>
+  <p>Choose a chest and try your luck!</p>
+  <div id="chests" style="margin-top: 30px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+    <button onclick="pickChest(0)" style="font-size: 3em;">🏺</button>
+    <button onclick="pickChest(1)" style="font-size: 3em;">🪙</button>
+    <button onclick="pickChest(2)" style="font-size: 3em;">🗝️</button>
+  </div>
+  <div id="treasureResult" style="margin-top: 20px; font-size: 1.5em; text-shadow: 0 0 10px #c0a0ff;"></div>
+  <div class="back-button">
+    <button onclick="goHome()">⬅️ Back to Home</button>
+  </div>
+</div>
 
   <script>
 // Check if userName is already saved
@@ -100,11 +114,19 @@ if (userName) {
 }
 
     function showPage(pageId) {
-      document.getElementById('home').classList.add('hidden');
-      document.getElementById('dice').classList.add('hidden');
-      document.getElementById('map').classList.add('hidden');
-      document.getElementById(pageId).classList.remove('hidden');
-    }
+  document.getElementById('home').classList.add('hidden');
+  document.getElementById('dice').classList.add('hidden');
+  document.getElementById('map').classList.add('hidden');
+  document.getElementById('namegen').classList.add('hidden');
+  document.getElementById('treasure').classList.add('hidden');
+
+  document.getElementById(pageId).classList.remove('hidden');
+
+  if (pageId === 'treasure') {
+    startTreasureGame();
+  }
+}
+
     function goHome() {
   document.getElementById('home').classList.remove('hidden');
   document.getElementById('dice').classList.add('hidden');
@@ -241,22 +263,23 @@ function riddleChallenge() {
     }
   }
 }
-function startTreasureHunt() {
-  const chests = ["Gold", "Empty", "Empty"];
-  // Shuffle the chests
-  chests.sort(() => Math.random() - 0.5);
-  
-  const choice = prompt("Pick a chest: 1, 2, or 3!");
+let treasureChests = [];
 
-  if (choice === "1" || choice === "2" || choice === "3") {
-    const selected = chests[parseInt(choice) - 1];
-    if (selected === "Gold") {
-      alert("🎉 You found the gold! You're rich!");
-    } else {
-      alert("🪨 Empty! Better luck next time...");
-    }
+function startTreasureGame() {
+  treasureChests = ["Gold", "Empty", "Empty"];
+  treasureChests.sort(() => Math.random() - 0.5); // Shuffle
+  document.getElementById('treasureResult').textContent = ""; // clear last result
+}
+
+function pickChest(index) {
+  if (treasureChests.length === 0) {
+    startTreasureGame();
+  }
+  
+  if (treasureChests[index] === "Gold") {
+    document.getElementById('treasureResult').textContent = "🎉 You found the GOLD! You're rich!";
   } else {
-    alert("⛔ Please pick 1, 2, or 3!");
+    document.getElementById('treasureResult').textContent = "🪨 It's empty... Try again!";
   }
 }
 
