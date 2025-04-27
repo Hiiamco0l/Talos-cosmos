@@ -3,234 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tale of Talos Cosmos</title>
+  <title>Tale of Talos Cosmos - Dice Roller</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
+      margin: 0;
+      padding: 0;
       font-family: 'Cinzel', serif;
       background: radial-gradient(ellipse at center, #0b0c2a 0%, #000000 100%);
-      color: #dcdcff;
-      min-height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
-
-    header {
-      text-align: center;
-      padding: 80px 20px 20px;
-      font-size: 3rem;
-      color: #c0a0ff;
-      text-shadow: 0 0 10px #c0a0ff, 0 0 20px #c0a0ff;
-      z-index: 2;
-      position: relative;
-    }
-
-    nav {
+      color: #d0d0ff;
       display: flex;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-top: 40px;
-      z-index: 2;
-      position: relative;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    nav button {
-      background: #2b2b50;
-      border: 2px solid #d0d0ff;
-      color: #d0d0ff;
-      padding: 15px 30px;
-      font-size: 1.2em;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.3s;
-      box-shadow: 0 0 10px #2b2b50;
-    }
-
-    nav button:hover {
-      background: #4a4a80;
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #5a5acc;
-    }
-
-    main {
-      text-align: center;
-      margin-top: 60px;
-      font-size: 1.5em;
-      padding: 0 20px;
-      z-index: 2;
-      position: relative;
-    }
-
-    #stars {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      top: 0;
-      left: 0;
-    }
-
-    /* Dice Roller Popup */
-    #diceRoller {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #1a1a30;
-      padding: 30px;
-      border: 2px solid #d0d0ff;
-      border-radius: 12px;
-      box-shadow: 0 0 20px #5a5acc;
-      z-index: 5;
-    }
-
-    #diceRoller h2 {
+    h1 {
+      font-size: 3em;
       margin-bottom: 20px;
-      font-size: 2em;
+      text-shadow: 0 0 10px #c0a0ff, 0 0 20px #c0a0ff;
     }
 
-    .dice-buttons button {
-      margin: 10px;
-      padding: 10px 20px;
+    .dice-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .dice {
       background: #2b2b50;
       border: 2px solid #d0d0ff;
       color: #d0d0ff;
-      border-radius: 8px;
-      font-size: 1.1em;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.3s;
-    }
-
-    .dice-buttons button:hover {
-      background: #4a4a80;
-      transform: scale(1.1);
-    }
-
-    #result {
-      margin-top: 20px;
+      padding: 20px 30px;
       font-size: 1.5em;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+      box-shadow: 0 0 15px #2b2b50;
+      position: relative;
     }
 
-    #close {
-      margin-top: 20px;
-      background: crimson;
+    .dice:hover {
+      background: #3d3d70;
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #5a5acc;
     }
 
-    canvas {
-      display: block;
+    .dice.rolling {
+      animation: shake 0.8s;
+    }
+
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: translate(-3px, 0px) rotate(1deg); }
+      30% { transform: translate(3px, 2px) rotate(0deg); }
+      40% { transform: translate(1px, -1px) rotate(1deg); }
+      50% { transform: translate(-1px, 2px) rotate(-1deg); }
+      60% { transform: translate(-3px, 1px) rotate(0deg); }
+      70% { transform: translate(3px, 1px) rotate(-1deg); }
+      80% { transform: translate(-1px, -1px) rotate(1deg); }
+      90% { transform: translate(1px, 2px) rotate(0deg); }
+      100% { transform: translate(1px, -2px) rotate(-1deg); }
+    }
+
+    .result {
+      margin-top: 30px;
+      font-size: 2em;
+      color: #c0a0ff;
+      text-shadow: 0 0 10px #c0a0ff;
     }
   </style>
 </head>
 <body>
-
-  <div id="stars">
-    <canvas id="starCanvas"></canvas>
+  <h1>Tale of Talos Cosmos</h1>
+  <div class="dice-container">
+    <div class="dice" onclick="rollDice(4)">D4</div>
+    <div class="dice" onclick="rollDice(6)">D6</div>
+    <div class="dice" onclick="rollDice(8)">D8</div>
+    <div class="dice" onclick="rollDice(10)">D10</div>
+    <div class="dice" onclick="rollDice(12)">D12</div>
+    <div class="dice" onclick="rollDice(20)">D20</div>
   </div>
 
-  <header>Tale of Talos Cosmos</header>
-
-  <nav>
-    <button onclick="openDiceRoller()">Dice Roller</button>
-    <button onclick="alert('Name Generator coming soon! ✨')">Name Generator</button>
-    <button onclick="alert('Monster Lookup coming soon! 🐉')">Monster Lookup</button>
-    <button onclick="alert('Tavern Generator coming soon! 🍻')">Tavern Generator</button>
-  </nav>
-
-  <main>
-    <p>Welcome, traveler of the Astral Plane. Your adventure begins soon...</p>
-  </main>
-
-  <!-- Dice Roller Popup -->
-  <div id="diceRoller">
-    <h2>Roll the Dice 🎲</h2>
-    <div class="dice-buttons">
-      <button onclick="rollDice(4)">d4</button>
-      <button onclick="rollDice(6)">d6</button>
-      <button onclick="rollDice(8)">d8</button>
-      <button onclick="rollDice(10)">d10</button>
-      <button onclick="rollDice(12)">d12</button>
-      <button onclick="rollDice(20)">d20</button>
-    </div>
-    <div id="result"></div>
-    <button id="close" onclick="closeDiceRoller()">Close</button>
-  </div>
+  <div class="result" id="result">Click a dice to roll!</div>
 
   <script>
-    // Stars Background
-    const canvas = document.getElementById('starCanvas');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let stars = [];
-
-    function resizeCanvas() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    }
-
-    function createStars() {
-      stars = [];
-      for (let i = 0; i < 150; i++) {
-        stars.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          radius: Math.random() * 1.5,
-          alpha: Math.random(),
-          speed: Math.random() * 0.5 + 0.2
-        });
-      }
-    }
-
-    function drawStars() {
-      ctx.clearRect(0, 0, width, height);
-      stars.forEach(star => {
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
-        ctx.fill();
-      });
-    }
-
-    function animateStars() {
-      stars.forEach(star => {
-        star.y += star.speed;
-        if (star.y > height) {
-          star.y = 0;
-          star.x = Math.random() * width;
-        }
-      });
-      drawStars();
-      requestAnimationFrame(animateStars);
-    }
-
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      createStars();
-    });
-
-    resizeCanvas();
-    createStars();
-    animateStars();
-
-    // Dice Roller Logic
-    function openDiceRoller() {
-      document.getElementById('diceRoller').style.display = 'block';
-    }
-
-    function closeDiceRoller() {
-      document.getElementById('diceRoller').style.display = 'none';
-    }
-
     function rollDice(sides) {
-      const result = Math.floor(Math.random() * sides) + 1;
-      document.getElementById('result').innerText = `🎲 You rolled: ${result}`;
+      const diceElements = document.querySelectorAll('.dice');
+      diceElements.forEach(dice => dice.classList.remove('rolling'));
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.textContent = "Rolling...";
+
+      const clickedDice = event.target;
+      clickedDice.classList.add('rolling');
+
+      setTimeout(() => {
+        const roll = Math.floor(Math.random() * sides) + 1;
+        resultDiv.textContent = `🎲 You rolled a ${roll} on a D${sides}!`;
+        clickedDice.classList.remove('rolling');
+      }, 800);
     }
   </script>
-
 </body>
 </html>
