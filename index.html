@@ -83,46 +83,23 @@
       position: relative;
     }
 
-    #dice-roller, #ship-map-container {
-      margin-top: 30px;
+    .hidden {
       display: none;
-      animation: fadeIn 1s ease forwards;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .dice-buttons {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
     }
 
-    #dice-roller button {
-      margin: 10px;
-      padding: 10px 20px;
-      font-size: 1em;
-      background-color: #2b2b50;
-      border: 2px solid #d0d0ff;
-      border-radius: 8px;
-      color: #d0d0ff;
-      cursor: pointer;
-      box-shadow: 0 0 10px #2b2b50;
-      transition: background 0.3s, transform 0.3s;
-    }
-
-    #dice-roller button:hover {
-      background: #3d3d70;
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #5a5acc;
-    }
-
-    #dice-result {
+    .dice-result {
       margin-top: 20px;
       font-size: 2em;
-    }
-
-    #ship-map-container img {
-      max-width: 90%;
-      border: 2px solid #d0d0ff;
-      border-radius: 10px;
-      box-shadow: 0 0 20px #5a5acc;
+      color: #ffd700;
+      text-shadow: 0 0 10px #ffd700;
     }
   </style>
 </head>
@@ -136,29 +113,31 @@
   </header>
 
   <nav>
-    <button onclick="showDiceRoller()">Dice Roller</button>
-    <button onclick="showShipMap()">Ship Map</button>
-    <button onclick="alert('Monster Lookup coming soon!')">Monster Lookup</button>
-    <button onclick="alert('Tavern Generator coming soon!')">Tavern Generator</button>
+    <button onclick="showDice()">Dice Roller</button>
+    <button onclick="showNameGenerator()">Name Generator</button>
   </nav>
 
-  <main>
+  <main id="main-content">
     <p>Welcome, traveler, to the astral plane... Choose your tool to begin your tale.</p>
-
-    <div id="dice-roller">
-      <button onclick="rollDice(4)">Roll d4</button>
-      <button onclick="rollDice(6)">Roll d6</button>
-      <button onclick="rollDice(8)">Roll d8</button>
-      <button onclick="rollDice(10)">Roll d10</button>
-      <button onclick="rollDice(12)">Roll d12</button>
-      <button onclick="rollDice(20)">Roll d20</button>
-      <div id="dice-result"></div>
-    </div>
-
-    <div id="ship-map-container">
-      <img src="ship-map.jpg" alt="Ship Map">
-    </div>
   </main>
+
+  <div id="dice-roller" class="hidden">
+    <div class="dice-buttons">
+      <button onclick="rollDice(4)">Roll D4</button>
+      <button onclick="rollDice(6)">Roll D6</button>
+      <button onclick="rollDice(8)">Roll D8</button>
+      <button onclick="rollDice(10)">Roll D10</button>
+      <button onclick="rollDice(12)">Roll D12</button>
+      <button onclick="rollDice(20)">Roll D20</button>
+    </div>
+    <div class="dice-result" id="dice-result"></div>
+  </div>
+
+  <div id="name-generator" class="hidden">
+    <p>Click the button to generate a random name:</p>
+    <button onclick="generateName()">Generate Name</button>
+    <div id="name-result" style="margin-top:20px; font-size:2em; color:#00ffcc;"></div>
+  </div>
 
   <script>
     const canvas = document.getElementById('star-canvas');
@@ -218,20 +197,27 @@
     createStars();
     animate();
 
-    function showDiceRoller() {
-      document.getElementById('dice-roller').style.display = 'block';
-      document.getElementById('ship-map-container').style.display = 'none';
+    function showDice() {
+      document.getElementById('main-content').classList.add('hidden');
+      document.getElementById('name-generator').classList.add('hidden');
+      document.getElementById('dice-roller').classList.remove('hidden');
     }
 
-    function showShipMap() {
-      document.getElementById('dice-roller').style.display = 'none';
-      document.getElementById('ship-map-container').style.display = 'block';
+    function showNameGenerator() {
+      document.getElementById('main-content').classList.add('hidden');
+      document.getElementById('dice-roller').classList.add('hidden');
+      document.getElementById('name-generator').classList.remove('hidden');
     }
 
     function rollDice(sides) {
       const result = Math.floor(Math.random() * sides) + 1;
-      const diceResult = document.getElementById('dice-result');
-      diceResult.textContent = `🎲 You rolled a d${sides} and got: ${result}`;
+      document.getElementById('dice-result').textContent = `You rolled: ${result}`;
+    }
+
+    function generateName() {
+      const names = ["Zarvok", "Elira", "Marnis", "Threx", "Yllara", "Vorin", "Seraph", "Dravok", "Talora", "Xelth"];
+      const randomName = names[Math.floor(Math.random() * names.length)];
+      document.getElementById('name-result').textContent = randomName;
     }
   </script>
 </body>
