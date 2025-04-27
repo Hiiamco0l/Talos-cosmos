@@ -22,22 +22,6 @@
     @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
     .result { margin-top: 30px; font-size: 2em; text-align: center; text-shadow: 0 0 10px #c0a0ff; }
     .back-button { margin-top: 30px; }
-	.starfield-settings {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(0,0,0,0.7);
-  padding: 10px;
-  border-radius: 10px;
-  color: white;
-  font-family: fantasy;
-  font-size: 14px;
-}
-.starfield-settings input, .starfield-settings button {
-  margin-top: 5px;
-  margin-bottom: 10px;
-}
-
   </style>
 </head>
 <body>
@@ -56,7 +40,7 @@
 	  <button onclick="riddleChallenge()">Solve the Riddle</button>
     </div>
   </div>
-  
+
   <div class="content hidden" id="dice">
     <h2>Dice Roller</h2>
     <div class="dice-container">
@@ -205,15 +189,14 @@ function drawOnMap(e) {
       }
     }
     function drawStars() {
-  ctx.clearRect(0, 0, width, height);
-  stars.forEach(star => {
-    ctx.fillStyle = star.color || 'white'; // default white if missing
-    ctx.beginPath();
-    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-    ctx.fill();
-  });
-}
-
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'white';
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
     function animateStars() {
       stars.forEach(star => {
         star.y += star.speed;
@@ -274,22 +257,6 @@ function riddleChallenge() {
     } else {
       alert("❌ Incorrect... Try again!");
     }
-  }
-}
-function applyStarfieldSettings() {
-  const count = parseInt(document.getElementById('starCount').value);
-  const color = document.getElementById('starColor').value;
-  const speed = parseFloat(document.getElementById('starSpeed').value);
-
-  stars = [];
-  for (let i = 0; i < count; i++) {
-    stars.push({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      size: Math.random() * 2,
-      speed: Math.random() * speed + 0.3,
-      color: color
-    });
   }
 }
 
