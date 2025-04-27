@@ -246,5 +246,13 @@
     resize();
     animateStars();
   </script>
+  <audio id="space-music" autoplay loop hidden>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_57c940b5cc.mp3?filename=deep-space-ambient-110624.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const music = document.getElementById('space-music');
+  music.volume = 0.2; // 20% volume
+</script>
 </body>
 </html>
