@@ -61,15 +61,23 @@
     </div>
   </div>
   <script>
-  // Ask for user's name and set custom welcome
-let userName = prompt("Greetings traveler, what is your name?");
-
+// Check if userName is already saved
+let userName = localStorage.getItem('userName');
 const welcomeText = document.getElementById('welcomeText');
 
+if (!userName) {
+  userName = prompt("Greetings traveler, what is your name?");
+  if (userName) {
+    localStorage.setItem('userName', userName); // Save it for next time
+  }
+}
+
+// Now update the welcome message
 if (userName) {
-  if (userName.trim().toLowerCase() === 'eddie') {
+  const lowerName = userName.trim().toLowerCase();
+  if (lowerName === 'eddie') {
     welcomeText.textContent = "Welcome Dungeon Master.";
-  } else if (userName.trim().toLowerCase() === 'calico') {
+  } else if (lowerName === 'calico') {
     welcomeText.textContent = "Welcome Captain.";
   } else {
     welcomeText.textContent = `Welcome, ${userName.trim()}, to the astral plane...`;
