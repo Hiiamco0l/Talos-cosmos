@@ -2,180 +2,245 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Astral Plane</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tale of Talos Cosmos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    .hidden {
-      display: none;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; font-family: 'Cinzel', serif; overflow: hidden; background: #000; color: #d0d0ff; }
+    #starfield { position: absolute; top: 0; left: 0; z-index: 0; width: 100%; height: 100%; }
+    header { text-align: center; padding: 50px 20px 20px 20px; font-size: 3em; color: #c0a0ff; text-shadow: 0 0 10px #c0a0ff, 0 0 20px #c0a0ff; position: relative; z-index: 2; }
+    .content { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 30px; z-index: 2; position: relative; }
+    .button-container { margin-top: 30px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    button { background: #2b2b50; border: 2px solid #d0d0ff; color: #d0d0ff; padding: 15px 30px; font-size: 1.2em; border-radius: 10px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 10px #2b2b50; }
+    button:hover { background: #3d3d70; transform: scale(1.05); box-shadow: 0 0 20px #5a5acc; }
+    .hidden { display: none; }
+    .dice-container { margin-top: 30px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .dice { background: #2b2b50; border: 2px solid #d0d0ff; padding: 20px 30px; font-size: 1.5em; border-radius: 12px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px #2b2b50; }
+    .dice:hover { background: #3d3d70; transform: scale(1.1); box-shadow: 0 0 20px #5a5acc; }
+    .dice.rolling { animation: shake 0.8s; }
+    @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+    .result { margin-top: 30px; font-size: 2em; text-align: center; text-shadow: 0 0 10px #c0a0ff; }
+    .back-button { margin-top: 30px; }
   </style>
 </head>
 <body>
-
-<!-- ⭐ Existing Sections ⭐ -->
-<div id="home">
-  <h1 id="welcomeText">Loading...</h1>
-  <button onclick="showPage('dice')">Dice Roller</button>
-  <button onclick="showPage('map')">Map Drawer</button>
-  <button onclick="showPage('riddleSection')">Riddle Challenge</button>
-  <button onclick="goHome()">Home</button>
+  <canvas id="starfield"></canvas>
+  <header>Tale of Talos Cosmos</header>
+  <div class="content" id="home">
+<p id="welcomeText">Loading...</p>
+<div style="margin-top: 20px;">
+  <button onclick="changeUser()">Change User</button>
+</div>
+    <div class="button-container">
+      <button onclick="showPage('dice')">🎲 Dice Roller</button>
+      <button onclick="showPage('map')">🗺️ Map</button>
+      <button onclick="showPage('namegen')">📝 Name Generator</button>
+      <button onclick="alert('Tavern Generator coming soon!')">🍻 Tavern Generator</button>
+	  <button onclick="riddleChallenge()">Solve the Riddle</button>
+    </div>
+  </div>
+  <div class="content hidden" id="dice">
+    <h2>Dice Roller</h2>
+    <div class="dice-container">
+      <div class="dice" onclick="rollDice(4)">D4</div>
+      <div class="dice" onclick="rollDice(6)">D6</div>
+      <div class="dice" onclick="rollDice(8)">D8</div>
+      <div class="dice" onclick="rollDice(10)">D10</div>
+      <div class="dice" onclick="rollDice(12)">D12</div>
+      <div class="dice" onclick="rollDice(20)">D20</div>
+    </div>
+    <div class="result" id="result">Click a dice to roll!</div>
+    <div class="back-button">
+      <button onclick="goHome()">⬅️ Back to Home</button>
+    </div>
+  </div>
+  <div class="content hidden" id="map">
+    <h2>Map</h2>
+    <canvas id="mapCanvas" width="800" height="600" style="background: #fff; border: 2px solid #d0d0ff;"></canvas>
+    <div style="margin-top: 20px;">
+      <button onclick="toggleTool()">🖌️ Toggle Draw/Erase</button>
+      <button onclick="clearCanvas()">🧹 Clear Map</button>
+      <button onclick="goHome()">⬅️ Back to Home</button>
+    </div>
+  </div>
+  <div class="content hidden" id="namegen">
+  <h2>Name Generator</h2>
+  <p id="generatedName" style="margin-top: 20px; font-size: 1.5em;">Click the button to generate a name!</p>
+  <div style="margin-top: 20px;">
+    <button onclick="generateName()">🎲 Generate Name</button>
+    <button onclick="goHome()">⬅️ Back to Home</button>
+  </div>
 </div>
 
-<div id="dice" class="hidden">
-  <h2>Dice Roller</h2>
-  <button onclick="rollDice(6)" class="dice">Roll D6</button>
-  <button onclick="rollDice(20)" class="dice">Roll D20</button>
-  <div id="result"></div>
-  <button onclick="goHome()">Back</button>
-</div>
+  <script>
+// Check if userName is already saved
+let userName = localStorage.getItem('userName');
+const welcomeText = document.getElementById('welcomeText');
 
-<div id="map" class="hidden">
-  <h2>Map Drawer</h2>
-  <canvas id="mapCanvas" width="800" height="600" style="border:1px solid black;"></canvas>
-  <br>
-  <button onclick="toggleTool()">Toggle Eraser/Draw</button>
-  <button onclick="clearCanvas()">Clear Map</button>
-  <button onclick="goHome()">Back</button>
-</div>
-
-<!-- ⭐ New Riddle Section ⭐ -->
-<div id="riddleSection" class="hidden">
-  <h2>Riddle of the Day</h2>
-  <p id="riddleQuestion"></p>
-  <input type="text" id="riddleAnswer" placeholder="Type your answer...">
-  <button onclick="checkRiddleAnswer()">Submit Answer</button>
-  <p id="riddleResult"></p>
-  <button onclick="goHome()">Back</button>
-</div>
-
-<!-- ⭐ Script Area ⭐ -->
-<script>
-  // Welcome Message
-  let userName = localStorage.getItem('userName');
-  const welcomeText = document.getElementById('welcomeText');
-
-  if (!userName) {
-    userName = prompt("Greetings traveler, what is your name?");
-    if (userName) {
-      localStorage.setItem('userName', userName);
-    }
-  }
-
+if (!userName) {
+  userName = prompt("Greetings traveler, what is your name?");
   if (userName) {
-    const lowerName = userName.trim().toLowerCase();
-    if (lowerName === 'eddie') {
-      welcomeText.textContent = "Welcome Dungeon Master.";
-    } else if (lowerName === 'calico') {
-      welcomeText.textContent = "Welcome Captain.";
-    } else {
-      welcomeText.textContent = `Welcome, ${userName.trim()}, to the astral plane...`;
-    }
+    localStorage.setItem('userName', userName); // Save it for next time
+  }
+}
+
+// Now update the welcome message
+if (userName) {
+  const lowerName = userName.trim().toLowerCase();
+  if (lowerName === 'eddie') {
+    welcomeText.textContent = "Welcome Dungeon Master.";
+  } else if (lowerName === 'calico') {
+    welcomeText.textContent = "Welcome Captain.";
   } else {
-    welcomeText.textContent = "Welcome, traveler, to the astral plane...";
+    welcomeText.textContent = `Welcome, ${userName.trim()}, to the astral plane...`;
   }
+} else {
+  welcomeText.textContent = "Welcome, traveler, to the astral plane...";
+}
 
-  // Navigation
-  function showPage(pageId) {
-    document.getElementById('home').classList.add('hidden');
-    document.getElementById('dice').classList.add('hidden');
-    document.getElementById('map').classList.add('hidden');
-    document.getElementById('riddleSection').classList.add('hidden');
-
-    document.getElementById(pageId).classList.remove('hidden');
-
-    if (pageId === 'riddleSection') {
-      showRiddle();
+    function showPage(pageId) {
+      document.getElementById('home').classList.add('hidden');
+      document.getElementById('dice').classList.add('hidden');
+      document.getElementById('map').classList.add('hidden');
+      document.getElementById(pageId).classList.remove('hidden');
     }
-  }
+    function goHome() {
+      document.getElementById('home').classList.remove('hidden');
+      document.getElementById('dice').classList.add('hidden');
+      document.getElementById('map').classList.add('hidden');
+    }
+    function rollDice(sides) {
+      const diceElements = document.querySelectorAll('.dice');
+      diceElements.forEach(dice => dice.classList.remove('rolling'));
+      const resultDiv = document.getElementById('result');
+      resultDiv.textContent = "Rolling...";
+      const clickedDice = event.target;
+      clickedDice.classList.add('rolling');
+      setTimeout(() => {
+        const roll = Math.floor(Math.random() * sides) + 1;
+        resultDiv.textContent = `🎲 You rolled a ${roll} on a D${sides}!`;
+        clickedDice.classList.remove('rolling');
+      }, 800);
+    }
+    // Map Drawing
+    let drawing = false;
+    let erasing = false;
+    const mapCanvas = document.getElementById('mapCanvas');
+    const mapCtx = mapCanvas.getContext('2d');
+    mapCanvas.addEventListener('mousedown', startDrawing);
+    mapCanvas.addEventListener('mouseup', stopDrawing);
+    mapCanvas.addEventListener('mouseout', stopDrawing);
+    mapCanvas.addEventListener('mousemove', drawOnMap);
+    function startDrawing(e) {
+  drawing = true;
+  const rect = mapCanvas.getBoundingClientRect();
+  mapCtx.beginPath();
+  mapCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+}
 
-  function goHome() {
-    document.getElementById('home').classList.remove('hidden');
-    document.getElementById('dice').classList.add('hidden');
-    document.getElementById('map').classList.add('hidden');
-    document.getElementById('riddleSection').classList.add('hidden');
-  }
+function stopDrawing() {
+  drawing = false;
+}
 
-  // Dice Roller
-  function rollDice(sides) {
-    const diceElements = document.querySelectorAll('.dice');
-    diceElements.forEach(dice => dice.classList.remove('rolling'));
-    const resultDiv = document.getElementById('result');
-    resultDiv.textContent = "Rolling...";
-    const clickedDice = event.target;
-    clickedDice.classList.add('rolling');
-    setTimeout(() => {
-      const roll = Math.floor(Math.random() * sides) + 1;
-      resultDiv.textContent = `🎲 You rolled a ${roll} on a D${sides}!`;
-      clickedDice.classList.remove('rolling');
-    }, 800);
-  }
+function drawOnMap(e) {
+  if (!drawing) return;
+  const rect = mapCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  mapCtx.lineWidth = erasing ? 20 : 3;
+  mapCtx.lineCap = 'round';
+  mapCtx.strokeStyle = erasing ? '#ffffff' : '#000000';
+  mapCtx.lineTo(x, y);
+  mapCtx.stroke();
+}
 
-  // Map Drawing
-  let drawing = false;
-  let erasing = false;
-  const mapCanvas = document.getElementById('mapCanvas');
-  const mapCtx = mapCanvas.getContext('2d');
-  mapCanvas.addEventListener('mousedown', startDrawing);
-  mapCanvas.addEventListener('mouseup', stopDrawing);
-  mapCanvas.addEventListener('mouseout', stopDrawing);
-  mapCanvas.addEventListener('mousemove', drawOnMap);
+    function toggleTool() { erasing = !erasing; alert(erasing ? "Eraser On" : "Draw Mode On"); }
+    function clearCanvas() { mapCtx.fillStyle = "#ffffff"; mapCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height); }
+    // Starfield
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let width, height, stars;
+    function resize() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; createStars(); }
+    function createStars() {
+      stars = [];
+      for (let i = 0; i < 200; i++) {
+        stars.push({ x: Math.random() * width, y: Math.random() * height, size: Math.random() * 2, speed: Math.random() * 0.5 + 0.3 });
+      }
+    }
+    function drawStars() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'white';
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+    function animateStars() {
+      stars.forEach(star => {
+        star.y += star.speed;
+        if (star.y > height) { star.y = 0; star.x = Math.random() * width; }
+      });
+      drawStars();
+      requestAnimationFrame(animateStars);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+    animateStars();
+	function changeUser() {
+  localStorage.removeItem('userName');
+  location.reload();
+}
+  // Name Generator Logic
+  function generateName() {
+  const names = [
+    "Aelar", "Branwen", "Caladrel", "Dorian", "Eldrin", "Faelana", "Galrik", "Helmira", "Isolde", "Jorvan",
+      "Kaelen", "Lyra", "Morthos", "Nerwen", "Orik", "Peregrin", "Quenya", "Roderic", "Sylvara", "Tamsin",
+      "Ulric", "Vaelin", "Wysteria", "Xander", "Ysolde", "Zanros", "Arannis", "Belwyn", "Cassian", "Druantia",
+      "Emric", "Fendrel", "Gwyneth", "Harkin", "Ilvara", "Jareth", "Kethril", "Liora", "Mirael", "Nym",
+      "Olorin", "Pyria", "Quorin", "Riven", "Seraphine", "Torin", "Umbra", "Veylin", "Wrenna", "Xanthos",
+      "Ysara", "Zorath", "Alaric", "Bryn", "Caelum", "Delsaran", "Eira", "Fenris", "Galen", "Halcyon",
+      "Ithil", "Jaspen", "Kallista", "Leoric", "Melwas", "Nyssa", "Orin", "Phaelon", "Quintessa", "Rurik",
+      "Saphira", "Tavros", "Uriel", "Vespera", "Wulfric", "Xyla", "Yorick", "Zephyra", "Anwyn", "Balthazar",
+      "Corvin", "Darian", "Elowen", "Faelar", "Gavric", "Hadriel", "Isilme", "Jax", "Kaida", "Lorcan",
+      "Maelis", "Nysa", "Osric", "Petra", "Quillian", "Rowan", "Selene", "Thane", "Ulrica", "Valko", "Toomuchdog"
 
-  function startDrawing(e) {
-    drawing = true;
-    const rect = mapCanvas.getBoundingClientRect();
-    mapCtx.beginPath();
-    mapCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-  }
-
-  function stopDrawing() {
-    drawing = false;
-  }
-
-  function drawOnMap(e) {
-    if (!drawing) return;
-    const rect = mapCanvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    mapCtx.lineWidth = erasing ? 20 : 3;
-    mapCtx.lineCap = 'round';
-    mapCtx.strokeStyle = erasing ? '#ffffff' : '#000000';
-    mapCtx.lineTo(x, y);
-    mapCtx.stroke();
-  }
-
-  function toggleTool() {
-    erasing = !erasing;
-    alert(erasing ? "Eraser On" : "Draw Mode On");
-  }
-
-  function clearCanvas() {
-    mapCtx.fillStyle = "#ffffff";
-    mapCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height);
-  }
-
-  // Riddle System
-  const riddles = [
-    { question: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?", answer: "echo" },
-    { question: "The more of me you take, the more you leave behind. What am I?", answer: "footsteps" },
-    { question: "What has keys but can't open locks?", answer: "piano" },
-    { question: "I’m tall when I’m young, and I’m short when I’m old. What am I?", answer: "candle" }
+    
   ];
-  let currentRiddle;
-
-  function showRiddle() {
-    currentRiddle = riddles[Math.floor(Math.random() * riddles.length)];
-    document.getElementById('riddleQuestion').textContent = currentRiddle.question;
-    document.getElementById('riddleResult').textContent = '';
-  }
-
-  function checkRiddleAnswer() {
-    const userAnswer = document.getElementById('riddleAnswer').value.trim().toLowerCase();
-    if (userAnswer === currentRiddle.answer) {
-      document.getElementById('riddleResult').textContent = "✅ Correct! Welcome, wise one.";
+  const randomIndex = Math.floor(Math.random() * names.length);
+  const name = names[randomIndex];
+  const text = `🔮 Your name is: ${name}!`;
+  const generatedNameDiv = document.getElementById('generatedName');
+  
+  let i = 0;
+  generatedNameDiv.textContent = ""; // clear old text
+  const typing = setInterval(() => {
+    if (i < text.length) {
+      generatedNameDiv.textContent += text.charAt(i);
+      i++;
     } else {
-      document.getElementById('riddleResult').textContent = "❌ Incorrect. Try again!";
+      clearInterval(typing);
+    }
+  }, 50); // Speed of typing (50ms per character)
+}
+function riddleChallenge() {
+  const riddle = "I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?";
+  const answer = "echo"; // correct answer
+  
+  let userAnswer = prompt(riddle);
+  
+  if (userAnswer) {
+    userAnswer = userAnswer.trim().toLowerCase();
+    if (userAnswer === answer) {
+      alert("✅ Correct! You may pass, traveler...");
+    } else {
+      alert("❌ Incorrect... Try again!");
     }
   }
-</script>
+}
 
+
+  </script>
 </body>
 </html>
